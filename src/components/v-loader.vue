@@ -1,6 +1,6 @@
 <template>
-    <div class="v-loader-container">
-        <div class="loader"></div>
+    <div class="modal-container loader">
+        <div class="spinner"></div>
     </div>
 </template>
 
@@ -20,30 +20,22 @@
     }
 </script>
 
-<style>
-    .v-loader-container {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: 1040;
-        background-color: #ffffffab;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        cursor: progress;
-    }
+<style lang="scss">
     .loader {
-        border-radius: 50%;
-        border: 16px solid #aefbfb;
-        border-right-color: #60ec60;
-        border-bottom-color: #f7bd94;
-        border-left-color: #f38ea0;
-        width: 120px;
-        height: 120px;
-        animation: spin 2s linear infinite;
+        z-index: 1040;
+        justify-content: center;
+        cursor: progress;
+
+        & .spinner {
+            border-radius: 50%;
+            border: 16px solid #2578fb;
+            border-right-color: #42ecc8;
+            border-bottom-color: #f7ef72;
+            border-left-color: #f34a5f;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
     }
 
     @keyframes spin {

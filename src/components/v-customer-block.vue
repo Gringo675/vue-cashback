@@ -1,45 +1,125 @@
 <template>
     <div class="v-customer-block">
-        <h3>Укажите Ваши данные</h3>
-        <div class="customerName">
-            <span>Укажите имя</span>
-            <input type="text"
-                   :value="customerName"
-                   @change="$emit('update:customerName', $event.target.value)"/>
-        </div>
-        <div class="customerMail">
-            <span>Укажите почту</span>
-            <input type="text"
-                   :value="customerMail"
-                   @change="$emit('update:customerMail', $event.target.value)"/>
-        </div>
-        <div class="customerPhone">
-            <span>Укажите номер телефона</span>
-            <input type="tel"
-                   :value="customerPhone"
-                   @change="$emit('update:customerPhone', $event.target.value)"
-                   ref="phone"/>
+        <h2 class="tooltip-block">
+            <span>Укажите Ваши данные</span>
+            <vTooltip
+                    :text="'Маленький тултип из четырех слов. <br> Перенос строки. <p>Абзац. Вот такой вот абзац. Из трех предложений.</p>'"
+            />
+        </h2>
+        <div class="cb-content">
+            <table>
+                <tr>
+                    <td>
+                        Имя
+                    </td>
+                    <td>
+                        <input type="text"
+                               :value="customerName"
+                               @change="$emit('update:customerName', $event.target.value)"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Почта
+                    </td>
+                    <td>
+                        <div class="valid-block">
+                            <div>
+                                <input type="text"
+                                       :value="customerMail"
+                                       @input="emailValidation"
+                                       @change="$emit('update:customerMail', $event.target.value)"/>
+                            </div>
+                            <div id="email-valid-error"></div>
+                        </div>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Телефон
+                    </td>
+                    <td>
+                        <input type="tel"
+                               :value="customerPhone"
+                               :disabled="this.isTheSamePhone"
+                               @change="$emit('update:customerPhone', $event.target.value)"
+                               ref="phone"/>
+                        <input type="checkbox" id="same-tel" v-model="isTheSamePhone">
+                        <label for="same-tel">тот же</label>
+                    </td>
+                </tr>
+            </table>
+            <div class="autonext tooltip-block">
+                <input type="checkbox" id="autonext" :checked="customerAutonext" @change="$emit('update:customerAutonext', $event.target.checked)">
+                <label for="autonext">Автоматически применять указанные данные к будущим счетам</label>
+                <vTooltip
+                        :text="'Если Вы активируете данную опцию, кешбек по следующим счетам будет осуществляться по указанным реквизитам.'"
+                />
+            </div>
+            <div class="pass tooltip-block">
+                <input type="checkbox" id="enablePass" :checked="enablePass" @click.prevent="customerPass.checkboxHandler">
+                <label for="enablePass">Защитить страницу паролем</label>
+                <button v-show="enablePass" @click="customerPass.enableSetPass">Сменить пароль</button>
+                <vTooltip
+                        :text="'После установки пароля только Вы будете иметь доступ к данной странице. В случае необходимости восстановления пароля будет использоваться указанная почта.'"
+                />
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-    import {Mask} from '@/assets/phoneMask.js';
+    import {Mask} from '@/assets/phoneMask.js'
+    import vTooltip from './v-tooltip'
 
     export default {
         name: "v-customer-block",
-        components: {},
+        components: {vTooltip},
         props: [
             'customerName',
             'customerMail',
-            'customerPhone'
+            'customerPhone',
+            'transferPhone',
+            'customerAutonext',
+            'customerPass',
         ],
         data() {
-            return {}
+            return {
+                isTheSamePhone: this.customerPhone === this.transferPhone,
+            }
         },
-        methods: {},
-        computed: {},
-        watch: {},
+        methods: {
+            emailValidation(event) {
+                if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(event.target.value)) {
+                    event.target.classList.add('input-complete');
+                }
+                else {
+                    event.target.classList.remove('input-complete');
+                }
+            }
+        },
+        computed: {
+            enablePass() {
+                return this.customerPass.newValue.length > 0
+            }
+        },
+        watch: {
+            transferPhone(value) {
+                 if (this.isTheSamePhone) {
+                    this.$emit('update:customerPhone', value)
+                }
+            },
+            isTheSamePhone(value) {
+                if (value) {
+                    this.$emit('update:customerPhone', this.transferPhone)
+                }
+                else {
+                    this.$emit('update:customerPhone', '+7 (___) ___-__-__')
+                }
+            }
+
+        },
         mounted() {
             // Маска на номер телефона
             let elem = this.$refs.phone;
@@ -53,5 +133,22 @@
 </script>
 
 <style lang="scss">
+    .v-customer-block {
+        margin: 0 20px 20px 20px;
 
+        & .cb-content {
+            margin: 20px;
+
+            input[type="text"] {
+                width: 250px;
+            }
+        }
+    }
+
+
+    img.question {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
 </style>

@@ -74,7 +74,7 @@ export function Mask() {
         // если изменилось значение completed
         if (isCompleted !== this.completed) {
             this.completed = !this.completed;
-            element.parentElement.classList.toggle('completed');
+            element.classList.toggle('input-complete');
         }
     }
 }
