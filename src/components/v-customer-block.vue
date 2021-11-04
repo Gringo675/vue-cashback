@@ -50,7 +50,7 @@
                     </td>
                 </tr>
             </table>
-            <div class="autonext tooltip-block">
+            <div class="autonext  tooltip-block">
                 <input type="checkbox" id="autonext" :checked="customerAutonext" @change="$emit('update:customerAutonext', $event.target.checked)">
                 <label for="autonext">Автоматически применять указанные данные к будущим счетам</label>
                 <vTooltip
