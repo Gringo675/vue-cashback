@@ -208,17 +208,19 @@
         text-align: center;
     }
 
-    .error-block {
-        background: #f971a3;
-        border-radius: 10px;
-        padding: 5px 30px;
-        width: fit-content;
-        color: white;
-        text-align: center;
-    }
 
     .valid-block {
         width: fit-content;
+
+      .error-block {
+        background: #f971a3;
+        border-radius: 10px;
+        padding: 3px 30px;
+        width: fit-content;
+        color: white;
+        text-align: center;
+        margin: auto;
+      }
     }
 
 

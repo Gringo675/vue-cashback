@@ -156,14 +156,21 @@
                 }
 
                 & .tb-all-banks {
-                    margin-bottom: 20px;
+                  margin-bottom: 20px;
+                  margin-left: -55px;
+                  width: 100vw;
+                  max-width: 360px;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: flex-end;
 
                     & .filter {
-                        width: 280px;
+                      width: 280px;
+                      margin: 10px;
                     }
 
                     & .banksWrapper {
-                        margin-left: 10px;
+                      margin: 0 10px;
                         width: 280px;
                         height: 140px;
                         background-color: #ffd8a0;
@@ -186,21 +193,15 @@
     }
 
     @media (max-width: 479px) {
-    /*    .v-transfer-block {
+        .v-transfer-block {
             .tb-content {
                 .tb-bank-choose {
                     .tb-all-banks {
-                        .filter {
-                            margin-left: -40px;
-                        }
-
-                        .banksWrapper {
-                            margin-left: -40px;
-                        }
+                      //margin-left: -40px;
                     }
                 }
             }
-        }*/
+        }
     }
 
 </style>

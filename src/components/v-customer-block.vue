@@ -142,13 +142,29 @@
             input[type="text"] {
                 width: 250px;
             }
+
+          .autonext {
+            margin: 10px 0;
+          }
         }
     }
+    @media (max-width: 479px) {
+
+      .v-customer-block {
+
+        .cb-content table tr {
+          display: flex;
+          flex-wrap: wrap;
+          margin-bottom: 10px;
+
+          td {
+            width: 100%;
+          }
 
 
-    img.question {
-        width: 20px;
-        height: 20px;
-        cursor: pointer;
+        }
+
+      }
+
     }
 </style>
