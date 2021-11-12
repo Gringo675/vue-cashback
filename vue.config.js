@@ -9,7 +9,10 @@
 //     },
 // };
 
-// disable esLint
+
 module.exports = {
-        lintOnSave: false
+        lintOnSave: false, // disable esLint
+        publicPath: process.env.NODE_ENV === 'production'
+            ? '/cashback/'
+            : '/'
 };

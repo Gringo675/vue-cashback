@@ -21,15 +21,6 @@
                 <div class="nav">
                     <a href="" @click.prevent="isForgetPass = !isForgetPass">Забыли пароль?</a>
                 </div>
-                <div  class="nav">
-                    <a href="" @click.prevent="isHaveQuestion = !isHaveQuestion">Есть вопрос?</a>
-                </div>
-                <div v-if="isHaveQuestion" class="have-a-question">
-                    <h3>Свяжитесь с нами:</h3>
-                    <p><a href="tel:+73517907748"><img :src="require(`@/assets/img/telephone.svg`)" alt="">+7 (351) 790-77-48</a></p>
-                    <p><a href="mailto:info@chelinstrument.ru"><img :src="require(`@/assets/img/envelope.svg`)" alt="">info@chelinstrument.ru</a></p>
-
-                </div>
                 <div v-if="isForgetPass" class="forget-pass">
                     <div class="description">Для вашей идентификации на указанный при активации пароля почтовый ящик
                         будет отправлено
@@ -40,6 +31,16 @@
                         <button @click="forgetPass">Отправить</button>
                     </div>
                 </div>
+                <div  class="nav">
+                    <a href="" @click.prevent="isHaveQuestion = !isHaveQuestion">Есть вопрос?</a>
+                </div>
+                <div v-if="isHaveQuestion" class="have-a-question">
+                    <h3>Свяжитесь с нами:</h3>
+                    <p><button @click="this.$emit('showFeedbackForm')">Задать вопрос</button></p>
+                    <p><a href="tel:+73517907748"><img :src="require(`@/assets/img/telephone.svg`)" alt="">+7 (351) 790-77-48</a></p>
+                    <p><a href="mailto:info@chelinstrument.ru"><img :src="require(`@/assets/img/envelope.svg`)" alt="">info@chelinstrument.ru</a></p>
+                </div>
+
             </div>
         </div>
     </div>
@@ -117,11 +118,12 @@
         .have-a-question {
             padding-left: 10px;
 
-            h4 {
-                margin-bottom: 5px;
+            h3 {
+                text-align: center;
             }
             p {
                 margin: 5px;
+                text-align: center;
             }
 
             img {

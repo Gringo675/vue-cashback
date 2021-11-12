@@ -44,10 +44,18 @@
         .modal-form {
 
             &.error {
-                border: 2px solid red;
+                border: 1px solid #f55555;
+
+                .modal-header {
+                    background: #ffa5a5;
+                }
             }
             &.sucsess {
-                border: 2px solid green;
+                border: 1px solid #b4ebe0;
+
+                .modal-header {
+                    background: #c6fff4;
+                }
             }
         }
     }

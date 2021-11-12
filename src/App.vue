@@ -211,8 +211,9 @@
 
     .valid-block {
         width: fit-content;
+    }
 
-      .error-block {
+    .error-block {
         background: #f971a3;
         border-radius: 10px;
         padding: 3px 30px;
@@ -220,7 +221,6 @@
         color: white;
         text-align: center;
         margin: auto;
-      }
     }
 
 

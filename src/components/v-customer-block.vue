@@ -13,7 +13,7 @@
                         Имя
                     </td>
                     <td>
-                        <input type="text"
+                        <input type="text" placeholder="Как к Вам обращаться"
                                :value="customerName"
                                @change="$emit('update:customerName', $event.target.value)"/>
                     </td>
@@ -25,7 +25,7 @@
                     <td>
                         <div class="valid-block">
                             <div>
-                                <input type="text"
+                                <input type="text" placeholder="E-mail для связи"
                                        :value="customerMail"
                                        @input="emailValidation"
                                        @change="$emit('update:customerMail', $event.target.value)"/>

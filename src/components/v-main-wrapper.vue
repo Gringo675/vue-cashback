@@ -4,6 +4,7 @@
             <vHeader/>
             <div class="body-wrapper">
                 <vBillBlock :billNumber="billNumber"
+                            :billDate="billDate"
                             :billCashback="billCashback"
                             :billStatus="billStatus"
                             @showWantMore="this.showWantMore = true"
@@ -22,6 +23,7 @@
             </div>
             <vFooter @setData="setData"
                      :message="message"
+                     @showFeedbackForm="this.showFeedbackForm = true"
             />
         </template>
 
@@ -30,13 +32,25 @@
                    :connectionStatus="customerPass.connectionStatus"
                    @passReceived="onPassReceived"
                    @forgetPass="onForgetPass"
+                   @showFeedbackForm="this.showFeedbackForm = true"
             />
         </transition>
         <transition name="modal-transition">
             <vWantMore v-if="showWantMore"
                        :billNumber="billNumber.toString()"
                        :loader="loader"
+                       :API_SERVER="API_SERVER"
                        @closeWantMore="this.showWantMore = false"
+            />
+        </transition>
+        <transition name="modal-transition">
+            <vFeedbackForm v-if="showFeedbackForm"
+                           :billNumber="billNumber?.toString() ?? ''"
+                           :name="customerName"
+                           :mail="customerMail"
+                           :loader="loader"
+                           :API_SERVER="API_SERVER"
+                           @closeFeedbackForm="this.showFeedbackForm = false"
             />
         </transition>
         <transition name="modal-transition">
@@ -85,6 +99,10 @@
                 loader: () => import('./v-want-more'),
                 loadingComponent: vLoader,
             }),
+            vFeedbackForm: defineAsyncComponent({
+                loader: () => import('./v-feedback-form'),
+                loadingComponent: vLoader,
+            }),
             vSetPass: defineAsyncComponent({
                 loader: () => import('./v-set-pass'),
                 loadingComponent: vLoader,
@@ -94,8 +112,12 @@
         props: {},
         data() {
             return {
+                IS_TEST: false, // если true, api-сервер будет работать с таблицей cashback_test
+                IS_LOCAL_API: false, // если true, приложение будет обращаться за данными на локальный сервер
+                API_SERVER: '', // значение присваевается в created
                 billID: undefined,
                 billNumber: undefined,
+                billDate: undefined,
                 billCashback: undefined,
                 billStatus: undefined,
                 transferType: undefined,
@@ -168,6 +190,7 @@
                 },
 
                 showWantMore: false,
+                showFeedbackForm: false,
 
             }
         },
@@ -175,10 +198,11 @@
             async getData() {
                 this.loader.enable();
                 try {
-                    let url = 'https://chelinstrument.ru/api?app=cb&method=get_data';
+                    let url = this.API_SERVER + 'app=cb&method=get_data';
                     let post = {
                         id: this.billID,
-                        pass: this.customerPass.value
+                        pass: this.customerPass.value,
+                        isTest: this.IS_TEST
                     };
                     let response = await fetch(url, {
                         method: 'POST',
@@ -189,12 +213,13 @@
                     });
                     if (response.ok) {
                         let result = await response.json();
-                        console.log(`result: ${JSON.stringify(result)}`);
+                        // console.log(`result: ${JSON.stringify(result)}`);
 
                         switch (result.statusCode) {
                             case 200: // ok
                                 result = result.data;
                                 this.billNumber = result.bill_number;
+                                this.billDate = result.bill_date;
                                 this.billCashback = result.bill_cashback;
                                 this.billStatus = this.unzipBillStatus(result.status);
                                 this.transferType = this.unzipTransferType(result.trans_type);
@@ -227,8 +252,7 @@
             async setData() {
                 this.loader.enable();
                 try {
-                    let url = 'https://chelinstrument.ru/api?app=cb&method=set_customer_data';
-                    // let url = 'http://localhost:3000/api?app=cb&method=set_customer_data';
+                    let url = this.API_SERVER + 'app=cb&method=set_customer_data';
                     let post = this.validateCustomerData();
                     if (!post) return; // валидация не прошла
                     let response = await fetch(url, {
@@ -295,18 +319,23 @@
                 }
                 post.customer_mail = this.customerMail;
 
+                post.isTest = this.IS_TEST;
+
                 return post
             },
             async onForgetPass() {
                 this.loader.enable();
                 try {
-                    let url = 'https://chelinstrument.ru/api?app=cb&method=forget_pass';
+                    let url = this.API_SERVER + 'app=cb&method=forget_pass';
                     let response = await fetch(url, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json;charset=utf-8'
                         },
-                        body: JSON.stringify({id: this.billID})
+                        body: JSON.stringify({
+                            id: this.billID,
+                            isTest: this.IS_TEST
+                        })
                     });
                     if (response.ok) {
                         let result = await response.json();
@@ -427,11 +456,11 @@
                 this.connectionError();
                 return
             }
+            this.API_SERVER = (this.IS_LOCAL_API ? 'http://localhost:3000/api?' : 'https://chelinstrument.ru/api?');
             this.getData();
 
         },
         mounted() {
-
         },
     }
 </script>

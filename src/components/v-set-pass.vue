@@ -7,24 +7,24 @@
             </div>
             <div class="modal-body">
                 <form @submit.prevent="setNewPass" id="set-pass-form">
-                    <div>
+                    <span>
                         <span class="col1">Введите пароль</span>
                         <span class="block-input-password">
                             <input :type="(showPass ? 'text' : 'password' )" v-model="pass1" ref="autofocus">
                             <img class="icon" @click="showPass = !showPass"
                                  :src="require(`@/assets/img/${(showPass ? 'eye-slash.svg' : 'eye.svg' )}`)"
                                  alt="">
+                        </span>
                     </span>
-                    </div>
-                    <div>
+                    <span>
                         <span class="col1">Повторите пароль</span>
                         <span class="block-input-password">
                             <input :type="(showPass ? 'text' : 'password' )" v-model="pass2" autofocus>
                             <img class="icon" @click="showPass = !showPass"
                                  :src="require(`@/assets/img/${(showPass ? 'eye-slash.svg' : 'eye.svg' )}`)"
                                  alt="">
+                        </span>
                     </span>
-                    </div>
                     <div v-if="warning.show" class="error-block"> {{warning.msg}} </div>
                 </form>
 
@@ -95,7 +95,12 @@
         }
 
         .error-block {
-            margin: 10px auto 0;
+            margin-top: 10px;
         }
+    }
+
+    #set-pass-form > span {
+        display: inline-block;
+        text-align: center;
     }
 </style>

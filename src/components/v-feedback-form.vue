@@ -1,22 +1,31 @@
 <template>
-    <div class="v-want-more modal-container" @click.self="closeForm">
+    <div class="v-feedback-form modal-container" @click.self="closeForm">
         <div class="modal-form">
             <div class="modal-header">
-                <div class="title">Хочу больше!</div>
+                <div class="title">Обратная связь</div>
                 <div class="btn-close" @click="closeForm"></div>
             </div>
             <div class="modal-body">
-                <form v-if="!deliverySucsess" id="want-more-form" @submit.prevent="sendForm">
+                <form v-if="!deliverySucsess" id="feedback-form" @submit.prevent="sendForm">
                     <div class="description">
-                        Укажите сумму, которую хотели бы получить в качестве кешбэка, или опишите Ваше пожелание в сообщении. Возможно, мы сумеем договориться!
+                        Воспользуйтесь данной формой, чтобы задать нам вопрос или отправить пожелание.
                     </div>
-                    <table class="vm-table">
+                    <table class="ff-table">
                         <tr>
                             <td>
-                                Сумма, руб.
+                                Имя
                             </td>
                             <td>
-                                <input v-model.number="form.amount" type="number" ref="autofocus">
+                                <input v-model.number="form.name" type="text" ref="autofocus" placeholder="Как к Вам обращаться">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Почта
+                            </td>
+                            <td>
+                                <input v-model.number="form.mail" type="text" placeholder="E-mail для ответа"
+                                       @input="emailValidation">
                             </td>
                         </tr>
                         <tr>
@@ -24,7 +33,7 @@
                                 Сообщение
                             </td>
                             <td>
-                                <textarea v-model="form.msg" rows="4"></textarea>
+                                <textarea v-model="form.msg" rows="4" placeholder="Опишите тему обращения"></textarea>
                             </td>
                         </tr>
                     </table>
@@ -33,13 +42,13 @@
                     </div>
                 </form>
                 <div v-else>
-                        Сообщение отправленно! Мы рассмотрим его в ближайшее время. Вы можете продолжить заполнение формы
-                 </div>
+                    Сообщение отправленно! Мы рассмотрим его в ближайшее время. Вы можете продолжить заполнение основной формы.
+                </div>
             </div>
             <div class="modal-footer">
                 <template v-if="!deliverySucsess" >
                     <button class="cancel" @click="closeForm" type="button">Отмена</button>
-                    <button type="submit" form="want-more-form">Отправить</button>
+                    <button type="submit" form="feedback-form">Отправить</button>
                 </template>
                 <template v-else>
                     <button @click="closeForm">OK</button>
@@ -51,17 +60,20 @@
 
 <script>
     export default {
-        name: "v-want-more",
+        name: "v-feedback-form",
         components: {},
         props: {
+            API_SERVER: String,
             billNumber: String,
-            loader: Object,
-            API_SERVER: String
+            name: String,
+            mail: String,
+            loader: Object
         },
         data() {
             return {
                 form: {
-                    amount: null,
+                    name: this.name,
+                    mail: this.mail,
                     msg: ''
                 },
 
@@ -84,17 +96,31 @@
             }
         },
         methods: {
+            emailValidation(event) {
+                if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(event.target.value)) {
+                    event.target.classList.add('input-complete');
+                }
+                else {
+                    event.target.classList.remove('input-complete');
+                }
+            },
             async sendForm() {
-                if (!(this.form.amount > 0) && !this.form.msg.length) {
-                    this.warning.enable('Пожалуйста укажите корректную сумму или оставьте Ваше пожелание в сообщении!');
+                if (!(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.form.mail))) {
+                    this.warning.enable('Пожалуйста укажите корректный адрес электронной почты! Иначе мы не сможем Вам ответить.');
+                    return
+                }
+                if (this.form.msg.length === 0) {
+                    this.warning.enable('Пожалуйста напишите сообщение!');
                     return
                 }
                 this.loader.enable();
                 try {
-                    let url = this.API_SERVER + 'app=cb&method=form_wantmore';
+                    let url = this.API_SERVER + 'app=cb&method=form_feedback';
+
                     let post = {
                         billNumber: this.billNumber,
-                        amount: this.form.amount,
+                        name: this.form.name,
+                        mail: this.form.mail,
                         msg: this.form.msg
                     };
                     let response = await fetch(url, {
@@ -121,7 +147,7 @@
                 this.loader.disable();
             },
             closeForm() {
-                this.$emit('closeWantMore')
+                this.$emit('closeFeedbackForm')
             },
 
         },
@@ -138,7 +164,7 @@
 </script>
 
 <style lang="scss">
-    .v-want-more {
+    .v-feedback-form {
 
         .description {
             border-radius: 10px;
@@ -146,17 +172,14 @@
             padding: 10px;
         }
 
-        .vm-table {
+        .ff-table {
             margin-top: 20px;
 
             td:first-child {
                 padding: 0 20px;
             }
 
-            input {
-                width: 150px;
-            }
-            textarea {
+            input, textarea {
                 width: 270px;
             }
         }
@@ -164,9 +187,9 @@
 
     @media (max-width: 479px) {
 
-        .v-want-more {
+        .v-feedback-form {
 
-            .vm-table tr {
+            .ff-table tr {
                 display: flex;
                 flex-wrap: wrap;
                 margin-bottom: 10px;
@@ -175,15 +198,11 @@
                     width: 100%;
                     text-align: center;
 
-                    textarea {
+                    input, textarea {
                         margin: 10px 0;
                     }
                 }
-
-
             }
-
         }
-
     }
 </style>

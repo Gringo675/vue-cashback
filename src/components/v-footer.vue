@@ -12,7 +12,7 @@
             <div class="columns">
                 <div class="col1">
                     <p>Есть вопросы? Свяжитесь с нами!</p>
-                    <button class="large">Задать вопрос</button>
+                    <button class="large" @click="this.$emit('showFeedbackForm')">Задать вопрос</button>
                 </div>
                 <div class="col2">
                     <p>ООО ТД "Челябинский Инструмент"</p>

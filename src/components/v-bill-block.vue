@@ -7,13 +7,13 @@
             />
         </h2>
 
-        <table class="bill-info">
+        <table  class="bill-info">
             <tr>
                 <td>
                     Номер и дата:
                 </td>
                 <td>
-                    <span class="field">№{{ billNumber }} от 01.01.2021</span>
+                    <span class="field">№{{ billNumber }} от {{ billDate }}</span>
                 </td>
             </tr>
             <tr>
@@ -44,6 +44,7 @@
         components: {vTooltip},
         props: [
             'billNumber',
+            'billDate',
             'billCashback',
             'billStatus'
         ],
