@@ -22,9 +22,8 @@
                     <a href="" @click.prevent="isForgetPass = !isForgetPass">Забыли пароль?</a>
                 </div>
                 <div v-if="isForgetPass" class="forget-pass">
-                    <div class="description">Для вашей идентификации на указанный при активации пароля почтовый ящик
-                        будет отправлено
-                        письмо.
+                    <div class="description">Для Вашей идентификации на указанный при активации пароля почтовый ящик
+                        будет отправлено письмо.
                     </div>
                     <div class="buttons">
                         <button @click="isForgetPass = false">Отмена</button>

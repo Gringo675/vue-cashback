@@ -3,7 +3,8 @@
         <h2 class="tooltip-block">
             <span>Укажите Ваши данные</span>
             <vTooltip
-                    :text="'Маленький тултип из четырех слов. <br> Перенос строки. <p>Абзац. Вот такой вот абзац. Из трех предложений.</p>'"
+                    :text="`Введите контактные данные, по которым мы сможем связаться с Вами, если это потребуется.<br>
+                            Почта обязательна к заполнению, остальное - по желанию.`"
             />
         </h2>
         <div class="cb-content">
@@ -43,8 +44,11 @@
                         <input type="tel"
                                :value="customerPhone"
                                :disabled="this.isTheSamePhone"
-                               @change="$emit('update:customerPhone', $event.target.value)"
-                               ref="phone"/>
+                               @focus="mask.create($event)"
+                               @click="mask.create($event)"
+                               @keydown="mask.create($event)"
+                               @input="onTelInput($event)"
+                        />
                         <input type="checkbox" id="same-tel" v-model="isTheSamePhone">
                         <label for="same-tel">тот же</label>
                     </td>
@@ -54,7 +58,9 @@
                 <input type="checkbox" id="autonext" :checked="customerAutonext" @change="$emit('update:customerAutonext', $event.target.checked)">
                 <label for="autonext">Автоматически применять указанные данные к будущим счетам</label>
                 <vTooltip
-                        :text="'Если Вы активируете данную опцию, кешбек по следующим счетам будет осуществляться по указанным реквизитам.'"
+                        :text="`При активации данной опции к Вашим следующим заказам будет применяться этот же способ перечисления кешбэка,
+                                что избавит от необходимости повторно вводить одинаковые данные.
+                                Однако Вы всегда сможете изменить способ перечисления для каждого конкретного заказа на его странице.`"
                 />
             </div>
             <div class="pass tooltip-block">
@@ -62,7 +68,9 @@
                 <label for="enablePass">Защитить страницу паролем</label>
                 <button v-show="enablePass" @click="customerPass.enableSetPass">Сменить пароль</button>
                 <vTooltip
-                        :text="'После установки пароля только Вы будете иметь доступ к данной странице. В случае необходимости восстановления пароля будет использоваться указанная почта.'"
+                        :text="`После установки пароля только Вы будете иметь доступ к данной странице.
+                                Его ввод будет требоваться при каждом входе.<br>
+                                В случае необходимости восстановления пароля будет использоваться указанная почта.`"
                 />
             </div>
         </div>
@@ -87,6 +95,7 @@
         data() {
             return {
                 isTheSamePhone: this.customerPhone === this.transferPhone,
+                mask: new Mask(),
             }
         },
         methods: {
@@ -97,6 +106,10 @@
                 else {
                     event.target.classList.remove('input-complete');
                 }
+            },
+            onTelInput(event) {
+                this.mask.create(event);
+                this.$emit('update:customerPhone', event.target.value)
             }
         },
         computed: {
@@ -121,13 +134,6 @@
 
         },
         mounted() {
-            // Маска на номер телефона
-            let elem = this.$refs.phone;
-            let mask = new Mask();
-            elem.addEventListener("input", mask.create, false);
-            elem.addEventListener("focus", mask.create, false);
-            elem.addEventListener("click", mask.create, false);
-            elem.addEventListener("keydown", mask.create, false);
         },
     }
 </script>

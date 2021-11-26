@@ -3,7 +3,9 @@
         <h2 class="tooltip-block">
             <span>Выберите способ перечисления</span>
             <vTooltip
-                    :text="'Маленький тултип из четырех слов. <br> Перенос строки. <p>Абзац. Вот такой вот абзац. Из трех предложений.</p>'"
+                    :text="`Кешбэк может быть перечислен Вам одним из двух способов:<br>
+                            - на балланс номера мобильного телефона, обслуживаемого на территории РФ;<br>
+                            - на банковскую карту одного из более чем 200 российских банков. Карта должна быть прикреплена к указываемому телефонному номеру.`"
             />
         </h2>
         <div class="tb-content">
@@ -46,10 +48,13 @@
                     <span>Телефон</span>
                     <input type="tel"
                            :value="transferPhone"
-                           @change="$emit('update:transferPhone', $event.target.value)"
-                           ref="phone"/>
+                           @focus="mask.create($event)"
+                           @click="mask.create($event)"
+                           @keydown="mask.create($event)"
+                           @input="onTelInput($event)"
+                     />
                     <vTooltip
-                            :text="'Должен быть привязан к банковской карте!'"
+                            :text="'Введите номер телефона, ' + (transferType === 'tel' ? 'на балланс которого будет перечислен кешбэк.' : 'привязанный к банковской карте.')"
                     />
                 </div>
                 <div id="phone-valid-error"></div>
@@ -90,9 +95,14 @@
                         }
                     }
                 },
+                mask: new Mask(),
             }
         },
         methods: {
+            onTelInput(event) {
+                this.mask.create(event);
+                this.$emit('update:transferPhone', event.target.value)
+            }
           },
         computed: {
             transferTypeComputed: {
@@ -129,14 +139,6 @@
         },
         watch: {},
         mounted() {
-            // Маска на номер телефона
-            let elem = this.$refs.phone;
-            let mask = new Mask();
-            elem.addEventListener("input", mask.create, false);
-            elem.addEventListener("focus", mask.create, false);
-            elem.addEventListener("click", mask.create, false);
-            elem.addEventListener("keydown", mask.create, false);
-
         },
     }
 </script>

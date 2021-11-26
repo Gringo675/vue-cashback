@@ -44,6 +44,17 @@
             />
         </transition>
         <transition name="modal-transition">
+            <vSetPass v-if="customerPass.showSetPass"
+                      :customerPass="customerPass"
+            />
+        </transition>
+        <transition name="modal-transition">
+            <vMessage v-if="message.show"
+                      :message="message"
+                      @showFeedbackForm="this.showFeedbackForm = true"
+            />
+        </transition>
+        <transition name="modal-transition">
             <vFeedbackForm v-if="showFeedbackForm"
                            :billNumber="billNumber?.toString() ?? ''"
                            :name="customerName"
@@ -52,15 +63,6 @@
                            :API_SERVER="API_SERVER"
                            @closeFeedbackForm="this.showFeedbackForm = false"
             />
-        </transition>
-        <transition name="modal-transition">
-            <vSetPass v-if="customerPass.showSetPass"
-                      :customerPass="customerPass"
-            />
-        </transition>
-        <transition name="modal-transition">
-            <vMessage v-if="message.show"
-                      :message="message"/>
         </transition>
 
         <vLoader v-if="loader.show"/>
@@ -276,7 +278,7 @@
                     }
                 } catch (e) {
                     // fail
-                    this.message.enable('При сохранении данных произошла ошибка. Возможно, это временные проблеммы с сетью или на сервере. Попробуйте повторить операцию чуть позже. При повторении ошибки пожалуйста сообщите нам о ней, отправив письмо на почту admin@chelinstrument.ru, или по телефону 8(351)790-77-48.', 'Ошибка сохранения', 'error');
+                    this.message.enable('При сохранении данных произошла ошибка. Возможно, это временные проблемы с сетью или на сервере. Попробуйте повторить операцию чуть позже. Если это не поможет, пожалуйста свяжитесь с нами.', 'Ошибка сохранения', 'error');
                 }
                 this.loader.disable();
             },
@@ -341,7 +343,7 @@
                         let result = await response.json();
                         if (result.statusCode === 200) {
                             // sucsess
-                            this.message.enable('Бла-бла-бла...', 'Письмо отправлено!', 'sucsess');
+                            this.message.enable('Проверьте почту - на Ваш почтовый ящик выслано письмо с дальнейшими инструкциями.', 'Письмо отправлено!', 'sucsess');
                         } else {
                             throw new Error();
                         }
@@ -351,7 +353,7 @@
                     }
                 } catch (e) {
                     // fail
-                    this.message.enable('Не удалось отправить письмо...', 'Ошибка отправки', 'error');
+                    this.message.enable('К сожалению, при отправке письма возникли трудности. Возможно, это связано со временным сбоем в работе сети или сервера. Вы можете попробовать повторить операцию. Если это не поможет, пожалуйста свяжитесь с нами.', 'Ошибка отправки', 'error');
                 }
                 this.loader.disable();
             },
@@ -440,7 +442,7 @@
                 this.loader.disable();
             },
             connectionError() {
-                this.message.enable('При получении данных произошла ошибка. Попробуйте обновить страницу. При повторении ошибки пожалуйста сообщите нам о ней, отправив письмо на почту admin@chelinstrument.ru, или по телефону 8(351)790-77-48.',
+                this.message.enable('При получении данных произошла ошибка. Возможно, это временные проблемы с сетью или на сервере. Попробуйте обновить страницу. При повторении ошибки пожалуйста сообщите нам о ней.',
                     'Ошибка соединения!', 'error');
                 this.customerPass.connectionStatus = 'notFound'
             },

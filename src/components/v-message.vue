@@ -5,7 +5,23 @@
                 <div class="title">{{message.title}}</div>
                 <div class="btn-close" @click="message.disable"></div>
             </div>
-            <div class="modal-body" v-html="message.text"></div>
+            <div class="modal-body">
+                <div  v-html="message.text"></div>
+                <div v-if="message.type === 'error'">
+
+
+                    <div  class="nav">
+                        <a href="" @click.prevent="showContacts = !showContacts">Свяжитесь с нами</a>
+                    </div>
+                    <div v-if="showContacts" class="contacts-block">
+                        <p><button @click="this.$emit('showFeedbackForm')">Задать вопрос</button></p>
+                        <p><a href="tel:+73517907748"><img :src="require(`@/assets/img/telephone.svg`)" alt="">+7 (351) 790-77-48</a></p>
+                        <p><a href="mailto:info@chelinstrument.ru"><img :src="require(`@/assets/img/envelope.svg`)" alt="">info@chelinstrument.ru</a></p>
+                    </div>
+
+
+                </div>
+            </div>
             <div class="modal-footer">
                 <button @click="message.disable">OK</button>
             </div>
@@ -24,9 +40,7 @@
         ],
         data() {
             return {
-
-                // ttest: require(`@/assets/test.json`),
-                // ttest: usersData
+                showContacts: false
             }
         },
         methods: {},
@@ -48,6 +62,28 @@
 
                 .modal-header {
                     background: #ffa5a5;
+                }
+
+                .nav {
+                    margin: 10px;
+                }
+
+                .contacts-block {
+                    padding-left: 10px;
+
+                    h3 {
+                        text-align: center;
+                    }
+                    p {
+                        margin: 5px;
+                        text-align: center;
+                    }
+
+                    img {
+                        margin-right: 10px;
+                        position: relative;
+                        top: 2px;
+                    }
                 }
             }
             &.sucsess {
