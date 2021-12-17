@@ -97,7 +97,7 @@
         },
         methods: {
             emailValidation(event) {
-                if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(event.target.value)) {
+                if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(event.target.value)) {
                     event.target.classList.add('input-complete');
                 }
                 else {
@@ -105,7 +105,7 @@
                 }
             },
             async sendForm() {
-                if (!(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.form.mail))) {
+                if (!(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(this.form.mail))) {
                     this.warning.enable('Пожалуйста укажите корректный адрес электронной почты! Иначе мы не сможем Вам ответить.');
                     return
                 }
@@ -154,11 +154,21 @@
         computed: {},
         watch: {},
         mounted() {
-            document.body.style.overflowY = 'hidden';
+            let wrapper = document.getElementById('main-wrapper');
+            let coord = wrapper.getBoundingClientRect();
+            wrapper.style.cssText = `
+                position: fixed;
+                left: ${coord.left}px;
+                top: ${coord.top}px;
+            `;
+
             this.$refs.autofocus.focus();
         },
         unmounted() {
-            document.body.removeAttribute('style');
+            let wrapper = document.getElementById('main-wrapper');
+            let top = wrapper.getBoundingClientRect().top * (-1);
+            wrapper.removeAttribute('style');
+            window.scrollTo(0,top);
         }
     }
 </script>

@@ -1,6 +1,6 @@
 <template>
     <div class="v-footer">
-        <div class="field">
+        <div class="disclaimer">
             Ваши данные будут использоваться только по прямому назначению - для перечисления кешбэка.
             Мы гарантируем, что не будем использовать их в рекламных кампаниях или передавать третьим лицам.
             Нажимая кнопку "Сохранить", вы соглашаетесь с <a href="" @click.prevent="showRules">правилами оказания услуги</a>.
@@ -10,10 +10,13 @@
         </div>
         <div class="basement">
             <div class="columns">
+
                 <div class="col1">
                     <p>Есть вопросы? Свяжитесь с нами!</p>
                     <button class="large" @click="this.$emit('showFeedbackForm')">Задать вопрос</button>
+                    <p class="privacy"><a href="" @click.prevent="showPrivacyPolicy">Политика конфиденциальности</a></p>
                 </div>
+
                 <div class="col2">
                     <p>ООО ТД "Челябинский Инструмент"</p>
                     <p><img :src="require(`@/assets/img/house.svg`)" alt="">454084 Россия, г. Челябинск, ул. Болейко, 5</p>
@@ -38,14 +41,18 @@
         },
         data() {
             return {
-                 rules: undefined
+                 rules: undefined,
+                privacy: undefined
             }
         },
         methods: {
             showRules() {
                 this.rules = require(`@/assets/rules.json`);
                 this.message.enable(this.rules.text, this.rules.title, 'info')
-
+            },
+            showPrivacyPolicy() {
+                this.privacy = require(`@/assets/privacy.json`);
+                this.message.enable(this.privacy.text, this.privacy.title, 'info')
             }
         },
         computed: {},
@@ -57,6 +64,13 @@
 
 <style lang="scss">
 
+.v-footer {
+    .disclaimer {
+        padding: 10px;
+        background: #eecbff;
+        text-align: center;
+    }
+
     .footer-batton {
         margin: 20px 0;
         width: 100%;
@@ -64,7 +78,7 @@
         & .large {
             display: block;
             margin: 0 auto;
-            padding: 10px 35px;
+            padding: 10px 80px;
             font-weight: bolder;
         }
     }
@@ -79,36 +93,45 @@
             align-items: flex-start;
             justify-content: space-around;
 
-            & .col1 {
+            .col1 {
                 font-size: 18px;
                 margin: 0 10px;
 
-                & p {
+                p {
                     text-align: center;
+
+                    &.privacy {
+                        margin: 10px 0 20px;
+                    }
                 }
 
-                & .large {
+                .large {
                     display: block;
-                    margin: 20px auto;
+                    margin: 10px auto;
                 }
             }
+            .col2 {
 
-            & .col2 {
-
-                & p:first-child {
+                 p:first-child {
                     text-decoration: underline;
                 }
 
-                & p {
+                 p {
                     margin-bottom: 5px;
                 }
 
-                & img {
+                 img {
                     margin-right: 10px;
                     position: relative;
                     top: 2px;
                 }
             }
         }
+        .copyright {
+            margin: 10px 0;
+            font-size: 14px;
+        }
     }
+}
+
 </style>

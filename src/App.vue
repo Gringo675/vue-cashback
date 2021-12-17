@@ -28,6 +28,10 @@
         background: #ffeed5;
         overflow-x: hidden;
         min-height: 100vh;
+        text-size-adjust: 100%;
+        -moz-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
     }
 
     h2 {
@@ -143,7 +147,7 @@
         & .modal-form {
             position: relative;
             top: 10vh;
-            max-height: 85vh;
+            max-height: 75vh;
             width: 600px;
             max-width: 95vw;
             border-radius: 10px;
@@ -155,7 +159,7 @@
 
 
             & .modal-header {
-                background: #ebdfce;
+                background: #ffc9af;
                 display: flex;
                 flex-direction: row;
                 justify-content: space-between;

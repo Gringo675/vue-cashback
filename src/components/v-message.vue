@@ -47,7 +47,20 @@
         computed: {},
         watch: {},
         mounted() {
+            let wrapper = document.getElementById('main-wrapper');
+            let coord = wrapper.getBoundingClientRect();
+            wrapper.style.cssText = `
+                position: fixed;
+                left: ${coord.left}px;
+                top: ${coord.top}px;
+            `;
         },
+        unmounted() {
+            let wrapper = document.getElementById('main-wrapper');
+            let top = wrapper.getBoundingClientRect().top * (-1);
+            wrapper.removeAttribute('style');
+            window.scrollTo(0,top);
+        }
     }
 </script>
 
@@ -61,7 +74,7 @@
                 border: 1px solid #f55555;
 
                 .modal-header {
-                    background: #ffa5a5;
+                    background: #ff767e;
                 }
 
                 .nav {
@@ -91,6 +104,13 @@
 
                 .modal-header {
                     background: #c6fff4;
+                }
+            }
+
+            .rules, .privacy {
+
+                h3, h4, p {
+                    margin: 10px 0;
                 }
             }
         }

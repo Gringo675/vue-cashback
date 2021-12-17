@@ -77,11 +77,21 @@
         computed: {},
         watch: {},
         mounted() {
-            document.body.style.overflowY = 'hidden';
+            let wrapper = document.getElementById('main-wrapper');
+            let coord = wrapper.getBoundingClientRect();
+            wrapper.style.cssText = `
+                position: fixed;
+                left: ${coord.left}px;
+                top: ${coord.top}px;
+            `;
+
             this.$refs.autofocus.focus();
         },
         unmounted() {
-            document.body.removeAttribute('style');
+            let wrapper = document.getElementById('main-wrapper');
+            let top = wrapper.getBoundingClientRect().top * (-1);
+            wrapper.removeAttribute('style');
+            window.scrollTo(0,top);
         }
     }
 </script>

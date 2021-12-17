@@ -1,6 +1,7 @@
 <template>
-    <div class="v-main-wrapper">
+    <div class="v-main-wrapper" id="main-wrapper">
         <template v-if="customerPass.connectionStatus === 'ok'">
+<!--            <vTtest />-->
             <vHeader/>
             <div class="body-wrapper">
                 <vBillBlock :billNumber="billNumber"
@@ -72,6 +73,7 @@
 </template>
 
 <script>
+    // import vTtest from './v-ttest'
     import vHeader from './v-header'
     import vBillBlock from './v-bill-block'
     import vTransferBlock from './v-transfer-block'
@@ -83,6 +85,7 @@
     export default {
         name: "v-main-wrapper",
         components: {
+            // vTtest,
             vHeader,
             vBillBlock,
             vTransferBlock,
@@ -268,7 +271,7 @@
                         let result = await response.json();
                         if (result.statusCode === 200) {
                             // sucsess
-                            this.message.enable('Бла-бла-бла...', 'Данные успешно сохранены!', 'sucsess');
+                            this.message.enable('Благодарим за использование сервиса! <br> Все сведения по состоянию заказа, в том числе по выплате кешбэка, Вы всегда найдете на этой странице, в разделе "Информация по счету".', 'Данные успешно сохранены!', 'sucsess');
                         } else {
                             throw new Error();
                         }
@@ -315,7 +318,7 @@
 
                 post.customer_phone = (this.customerPhone.indexOf("_") === -1 ? this.customerPhone : '');
 
-                if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.customerMail)) {
+                if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(this.customerMail)) {
                     this.validationMessage('Укажите email-адрес!', 'email-valid-error');
                     return false
                 }
@@ -452,7 +455,7 @@
         watch: {},
         created() {
             try {
-                this.billID = window.location.search.match(/^\?id=([a-z0-9-]+)/)[1];
+                this.billID = window.location.search.match(/^\?id=([a-z0-9-]+)/i)[1];
                 if (this.billID.length !== 36) throw new Error();
             } catch (e) {
                 this.connectionError();
@@ -460,9 +463,11 @@
             }
             this.API_SERVER = (this.IS_LOCAL_API ? 'http://localhost:3000/api?' : 'https://chelinstrument.ru/api?');
             this.getData();
-
         },
         mounted() {
+            // костыль для устройств на iOS, помогающий им отслеживать событие mouseleave. Нужно для тултипов.
+            // document.body.addEventListener("click", ()=>{}); не работает на iPhone 5S
+            document.getElementById('main-wrapper').addEventListener("click", ()=>{});
         },
     }
 </script>

@@ -19,7 +19,7 @@
             </tr>
             <tr>
                 <td>
-                    Сумма кешбека:
+                    Сумма кешбэка:
                 </td>
                 <td>
                     <div class="sum-wrapper"><span class="field">{{ billCashback }} руб.</span> <button @click="this.$emit('showWantMore')">Хочу больше!</button></div>
